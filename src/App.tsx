@@ -11,6 +11,13 @@ import { ChallengesDashboard } from './components/Social/ChallengesDashboard';
 import { AchievementsDashboard } from './components/Achievements/AchievementsDashboard';
 import { LoadingSpinner } from './components/LoadingSpinner';
 import { useHealthData } from './hooks/useHealthData';
+// Import mock data for fallback
+import {
+  mockActivityData,
+  mockSleepData,
+  mockNutritionData,
+  mockStressData
+} from './data/mockData';
 
 function App() {
   const [activeTab, setActiveTab] = useState('today');
@@ -30,38 +37,46 @@ function App() {
     return <LoadingSpinner />;
   }
 
+  // Safe data access with fallback to mock data
+  const currentActivityData = activityData[0] || mockActivityData[0];
+  const currentSleepData = sleepData[0] || mockSleepData[0];
+  const currentNutritionData = nutritionData[0] || mockNutritionData[0];
+  const currentStressData = stressData[0] || mockStressData[0];
+
   const renderContent = () => {
     switch (activeTab) {
       case 'today':
         return (
           <TodayOverview
-            activityData={activityData[0]}
-            sleepData={sleepData[0]}
-            nutritionData={nutritionData[0]}
-            stressData={stressData[0]}
+            activityData={currentActivityData}
+            sleepData={currentSleepData}
+            nutritionData={currentNutritionData}
+            stressData={currentStressData}
             goals={healthGoals}
           />
         );
       case 'activity':
-        return <ActivityDashboard data={activityData} />;
+        return <ActivityDashboard data={activityData.length > 0 ? activityData : mockActivityData} />;
       case 'sleep':
-        return <SleepDashboard data={sleepData} />;
+        return <SleepDashboard data={sleepData.length > 0 ? sleepData : mockSleepData} />;
       case 'nutrition':
-        return <NutritionDashboard data={nutritionData} />;
+        return <NutritionDashboard data={nutritionData.length > 0 ? nutritionData : mockNutritionData} />;
       case 'stress':
-        return <StressDashboard data={stressData} />;
+        return <StressDashboard data={stressData.length > 0 ? stressData : mockStressData} />;
       case 'challenges':
         return <ChallengesDashboard challenges={challenges} />;
       case 'achievements':
         return <AchievementsDashboard achievements={achievements} />;
       default:
-        return <TodayOverview
-          activityData={activityData[0]}
-          sleepData={sleepData[0]}
-          nutritionData={nutritionData[0]}
-          stressData={stressData[0]}
-          goals={healthGoals}
-        />;
+        return (
+          <TodayOverview
+            activityData={currentActivityData}
+            sleepData={currentSleepData}
+            nutritionData={currentNutritionData}
+            stressData={currentStressData}
+            goals={healthGoals}
+          />
+        );
     }
   };
 
