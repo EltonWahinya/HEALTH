@@ -9,6 +9,11 @@ import {
   User 
 } from '../types/health';
 
+// Helper function for consistent date handling
+const today = new Date();
+const yesterday = new Date(today);
+yesterday.setDate(yesterday.getDate() - 1);
+
 export const mockUser: User = {
   id: '1',
   name: 'Alex Johnson',
@@ -19,7 +24,7 @@ export const mockUser: User = {
 export const mockActivityData: ActivityData[] = [
   {
     id: '1',
-    date: new Date(),
+    date: today,
     steps: 8547,
     distance: 6.2,
     calories: 342,
@@ -31,15 +36,15 @@ export const mockActivityData: ActivityData[] = [
         type: 'running',
         duration: 35,
         calories: 285,
-        startTime: new Date(Date.now() - 2 * 60 * 60 * 1000),
-        endTime: new Date(Date.now() - 1.5 * 60 * 60 * 1000),
+        startTime: new Date(today.getTime() - 2 * 60 * 60 * 1000),
+        endTime: new Date(today.getTime() - 1.5 * 60 * 60 * 1000),
         heartRate: { avg: 145, max: 168, min: 120 }
       }
     ]
   },
   {
     id: '2',
-    date: new Date(Date.now() - 24 * 60 * 60 * 1000),
+    date: yesterday,
     steps: 12340,
     distance: 8.9,
     calories: 456,
@@ -52,14 +57,14 @@ export const mockActivityData: ActivityData[] = [
 export const mockSleepData: SleepData[] = [
   {
     id: '1',
-    date: new Date(),
-    bedTime: new Date(Date.now() - 8 * 60 * 60 * 1000),
-    wakeTime: new Date(Date.now() - 30 * 60 * 1000),
-    totalSleep: 450, // 7.5 hours
+    date: yesterday,  // ← Changed to yesterday (sleep from last night)
+    bedTime: new Date(yesterday.getTime() + 22 * 60 * 60 * 1000), // 10 PM yesterday
+    wakeTime: new Date(today.getTime() + 6 * 60 * 60 * 1000),     // 6 AM today
+    totalSleep: 450, // 7.5 hours (10 PM - 6:30 AM with 30 mins awake)
     deepSleep: 135,
     lightSleep: 225,
     remSleep: 90,
-    awakeTime: 15,
+    awakeTime: 30,   // Increased for realism
     sleepScore: 85,
     bloodOxygen: [98, 97, 98, 99, 97, 98],
     snoreDetection: {
@@ -72,12 +77,12 @@ export const mockSleepData: SleepData[] = [
 export const mockNutritionData: NutritionData[] = [
   {
     id: '1',
-    date: new Date(),
+    date: today,
     meals: [
       {
         id: '1',
         type: 'breakfast',
-        timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000),
+        timestamp: new Date(today.getTime() - 6 * 60 * 60 * 1000),
         foods: [
           {
             id: '1',
@@ -90,12 +95,13 @@ export const mockNutritionData: NutritionData[] = [
             fat: 6,
             fiber: 8
           }
-        ]
+        ],
+        totalCalories: 320 // Added meal-level total
       },
       {
         id: '2',
         type: 'lunch',
-        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
+        timestamp: new Date(today.getTime() - 2 * 60 * 60 * 1000),
         foods: [
           {
             id: '2',
@@ -108,7 +114,8 @@ export const mockNutritionData: NutritionData[] = [
             fat: 28,
             fiber: 6
           }
-        ]
+        ],
+        totalCalories: 450 // Added meal-level total
       }
     ],
     waterIntake: 1800,
@@ -125,19 +132,19 @@ export const mockNutritionData: NutritionData[] = [
 export const mockStressData: StressData[] = [
   {
     id: '1',
-    date: new Date(),
+    date: today,
     stressLevel: 35,
     hrvReadings: [
-      { timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), value: 45, heartRate: 72 },
-      { timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000), value: 42, heartRate: 75 },
-      { timestamp: new Date(), value: 48, heartRate: 68 }
+      { timestamp: new Date(today.getTime() - 2 * 60 * 60 * 1000), value: 45, heartRate: 72 },
+      { timestamp: new Date(today.getTime() - 1 * 60 * 60 * 1000), value: 42, heartRate: 75 },
+      { timestamp: new Date(today.getTime()), value: 48, heartRate: 68 }
     ],
     breathingExercises: [
       {
         id: '1',
         duration: 5,
         type: 'calm',
-        completedAt: new Date(Date.now() - 3 * 60 * 60 * 1000)
+        completedAt: new Date(today.getTime() - 3 * 60 * 60 * 1000)
       }
     ],
     moodEntries: [
@@ -145,7 +152,7 @@ export const mockStressData: StressData[] = [
         id: '1',
         mood: 'good',
         notes: 'Feeling energized after morning workout',
-        timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000)
+        timestamp: new Date(today.getTime() - 4 * 60 * 60 * 1000)
       }
     ]
   }
@@ -187,29 +194,32 @@ export const mockAchievements: Achievement[] = [
     id: '1',
     title: 'First Steps',
     description: 'Complete your first 1,000 steps',
-    icon: 'footprints',
+    icon: 'Footprints', // Changed to match Lucide icon name
     category: 'activity',
     unlockedAt: new Date('2024-12-01'),
     progress: 1000,
-    target: 1000
+    target: 1000,
+    isUnlocked: true // Added for clarity
   },
   {
     id: '2',
     title: 'Marathon Walker',
     description: 'Walk 100,000 steps in a month',
-    icon: 'trophy',
+    icon: 'Trophy', // Changed to match Lucide icon name
     category: 'activity',
     progress: 67543,
-    target: 100000
+    target: 100000,
+    isUnlocked: false
   },
   {
     id: '3',
     title: 'Sleep Champion',
     description: 'Maintain 8+ hours of sleep for 30 days',
-    icon: 'moon',
+    icon: 'Moon', // Changed to match Lucide icon name
     category: 'sleep',
     progress: 12,
-    target: 30
+    target: 30,
+    isUnlocked: false
   }
 ];
 
@@ -249,18 +259,18 @@ export const mockHealthGoals: HealthGoal[] = [
 ];
 
 export const workoutTypes = [
-  { id: 'running', name: 'Running', icon: 'zap' },
-  { id: 'walking', name: 'Walking', icon: 'footprints' },
-  { id: 'cycling', name: 'Cycling', icon: 'bike' },
-  { id: 'swimming', name: 'Swimming', icon: 'waves' },
-  { id: 'hiit', name: 'HIIT', icon: 'flame' },
-  { id: 'yoga', name: 'Yoga', icon: 'heart' },
-  { id: 'strength', name: 'Strength Training', icon: 'dumbbell' },
-  { id: 'cardio', name: 'Cardio', icon: 'activity' },
-  { id: 'pilates', name: 'Pilates', icon: 'circle' },
-  { id: 'dance', name: 'Dance', icon: 'music' },
-  { id: 'boxing', name: 'Boxing', icon: 'shield' },
-  { id: 'tennis', name: 'Tennis', icon: 'circle' }
+  { id: 'running', name: 'Running', icon: 'Zap' },
+  { id: 'walking', name: 'Walking', icon: 'Footprints' },
+  { id: 'cycling', name: 'Cycling', icon: 'Bike' },
+  { id: 'swimming', name: 'Swimming', icon: 'Waves' },
+  { id: 'hiit', name: 'HIIT', icon: 'Flame' },
+  { id: 'yoga', name: 'Yoga', icon: 'Heart' },
+  { id: 'strength', name: 'Strength Training', icon: 'Dumbbell' },
+  { id: 'cardio', name: 'Cardio', icon: 'Activity' },
+  { id: 'pilates', name: 'Pilates', icon: 'Circle' },
+  { id: 'dance', name: 'Dance', icon: 'Music' },
+  { id: 'boxing', name: 'Boxing', icon: 'Shield' },
+  { id: 'tennis', name: 'Tennis', icon: 'Circle' }
 ];
 
 export const foodDatabase = [
