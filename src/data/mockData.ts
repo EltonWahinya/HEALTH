@@ -6,13 +6,28 @@ import {
   Challenge, 
   Achievement, 
   HealthGoal,
-  User 
+  User,
+  Meal,
+  Workout
 } from '../types/health';
 
 // Helper function for consistent date handling
 const today = new Date();
 const yesterday = new Date(today);
 yesterday.setDate(yesterday.getDate() - 1);
+
+// Generate dates for the past 7 days
+const generatePastDates = (days: number) => {
+  const dates = [];
+  for (let i = 0; i < days; i++) {
+    const date = new Date(today);
+    date.setDate(date.getDate() - i);
+    dates.push(date);
+  }
+  return dates.reverse();
+};
+
+const past7Days = generatePastDates(7);
 
 export const mockUser: User = {
   id: '1',
@@ -21,142 +36,151 @@ export const mockUser: User = {
   joinDate: new Date('2023-01-15'),
 };
 
-export const mockActivityData: ActivityData[] = [
-  {
-    id: '1',
-    date: today,
-    steps: 8547,
-    distance: 6.2,
-    calories: 342,
-    activeMinutes: 67,
-    floorsClimbed: 12,
-    workouts: [
-      {
-        id: '1',
-        type: 'running',
-        duration: 35,
-        calories: 285,
-        startTime: new Date(today.getTime() - 2 * 60 * 60 * 1000),
-        endTime: new Date(today.getTime() - 1.5 * 60 * 60 * 1000),
-        heartRate: { avg: 145, max: 168, min: 120 }
+export const mockActivityData: ActivityData[] = past7Days.map((date, index) => ({
+  id: `activity-${index + 1}`,
+  date,
+  steps: Math.floor(8000 + Math.random() * 6000),
+  distance: Math.floor(5 + Math.random() * 4),
+  calories: Math.floor(300 + Math.random() * 200),
+  activeMinutes: Math.floor(60 + Math.random() * 40),
+  floorsClimbed: Math.floor(10 + Math.random() * 15),
+  workouts: index % 2 === 0 ? [
+    {
+      id: `workout-${index + 1}`,
+      type: ['running', 'walking', 'cycling', 'yoga'][index % 4] as Workout['type'],
+      duration: Math.floor(30 + Math.random() * 30),
+      calories: Math.floor(200 + Math.random() * 150),
+      startTime: new Date(date.getTime() + 8 * 60 * 60 * 1000),
+      endTime: new Date(date.getTime() + 9 * 60 * 60 * 1000),
+      heartRate: { 
+        avg: Math.floor(120 + Math.random() * 40),
+        max: Math.floor(150 + Math.random() * 30),
+        min: Math.floor(60 + Math.random() * 20)
       }
-    ]
-  },
-  {
-    id: '2',
-    date: yesterday,
-    steps: 12340,
-    distance: 8.9,
-    calories: 456,
-    activeMinutes: 89,
-    floorsClimbed: 18,
-    workouts: []
-  }
-];
-
-export const mockSleepData: SleepData[] = [
-  {
-    id: '1',
-    date: yesterday,  // ← Changed to yesterday (sleep from last night)
-    bedTime: new Date(yesterday.getTime() + 22 * 60 * 60 * 1000), // 10 PM yesterday
-    wakeTime: new Date(today.getTime() + 6 * 60 * 60 * 1000),     // 6 AM today
-    totalSleep: 450, // 7.5 hours (10 PM - 6:30 AM with 30 mins awake)
-    deepSleep: 135,
-    lightSleep: 225,
-    remSleep: 90,
-    awakeTime: 30,   // Increased for realism
-    sleepScore: 85,
-    bloodOxygen: [98, 97, 98, 99, 97, 98],
-    snoreDetection: {
-      totalSnoreTime: 12,
-      snoreEvents: 3
     }
-  }
-];
+  ] : []
+}));
 
-export const mockNutritionData: NutritionData[] = [
-  {
-    id: '1',
-    date: today,
-    meals: [
-      {
-        id: '1',
-        type: 'breakfast',
-        timestamp: new Date(today.getTime() - 6 * 60 * 60 * 1000),
-        foods: [
-          {
-            id: '1',
-            name: 'Oatmeal with Berries',
-            quantity: 1,
-            unit: 'bowl',
-            calories: 320,
-            protein: 12,
-            carbs: 58,
-            fat: 6,
-            fiber: 8
-          }
-        ],
-        totalCalories: 320 // Added meal-level total
-      },
-      {
-        id: '2',
-        type: 'lunch',
-        timestamp: new Date(today.getTime() - 2 * 60 * 60 * 1000),
-        foods: [
-          {
-            id: '2',
-            name: 'Grilled Chicken Salad',
-            quantity: 1,
-            unit: 'serving',
-            calories: 450,
-            protein: 35,
-            carbs: 15,
-            fat: 28,
-            fiber: 6
-          }
-        ],
-        totalCalories: 450 // Added meal-level total
-      }
-    ],
-    waterIntake: 1800,
-    totalCalories: 770,
+export const mockSleepData: SleepData[] = past7Days.map((date, index) => {
+  const sleepDate = new Date(date);
+  sleepDate.setDate(sleepDate.getDate() - 1); // Sleep from previous night
+  
+  return {
+    id: `sleep-${index + 1}`,
+    date: sleepDate,
+    bedTime: new Date(sleepDate.getTime() + 22 * 60 * 60 * 1000), // 10 PM
+    wakeTime: new Date(date.getTime() + 6 * 60 * 60 * 1000), // 6 AM next day
+    totalSleep: Math.floor(420 + Math.random() * 60), // 7-8 hours
+    deepSleep: Math.floor(100 + Math.random() * 50),
+    lightSleep: Math.floor(200 + Math.random() * 50),
+    remSleep: Math.floor(80 + Math.random() * 40),
+    awakeTime: Math.floor(20 + Math.random() * 20),
+    sleepScore: Math.floor(70 + Math.random() * 25),
+    bloodOxygen: Array(6).fill(0).map(() => Math.floor(95 + Math.random() * 4)),
+    snoreDetection: {
+      totalSnoreTime: Math.floor(Math.random() * 20),
+      snoreEvents: Math.floor(Math.random() * 5)
+    }
+  };
+});
+
+export const mockNutritionData: NutritionData[] = past7Days.map((date, index) => {
+  const meals: Meal[] = [
+    {
+      id: `meal-${index}-1`,
+      type: 'breakfast',
+      timestamp: new Date(date.getTime() + 8 * 60 * 60 * 1000), // 8 AM
+      foods: [
+        {
+          id: '1',
+          name: 'Oatmeal with Berries',
+          quantity: 1,
+          unit: 'bowl',
+          calories: 320,
+          protein: 12,
+          carbs: 58,
+          fat: 6,
+          fiber: 8
+        }
+      ]
+    },
+    {
+      id: `meal-${index}-2`,
+      type: 'lunch',
+      timestamp: new Date(date.getTime() + 13 * 60 * 60 * 1000), // 1 PM
+      foods: [
+        {
+          id: '2',
+          name: 'Grilled Chicken Salad',
+          quantity: 1,
+          unit: 'serving',
+          calories: 450,
+          protein: 35,
+          carbs: 15,
+          fat: 28,
+          fiber: 6
+        }
+      ]
+    }
+  ];
+
+  const totalCalories = meals.reduce((sum, meal) => 
+    sum + meal.foods.reduce((mealSum, food) => mealSum + food.calories, 0), 0
+  );
+
+  const totalProtein = meals.reduce((sum, meal) => 
+    sum + meal.foods.reduce((mealSum, food) => mealSum + food.protein, 0), 0
+  );
+
+  const totalCarbs = meals.reduce((sum, meal) => 
+    sum + meal.foods.reduce((mealSum, food) => mealSum + food.carbs, 0), 0
+  );
+
+  const totalFat = meals.reduce((sum, meal) => 
+    sum + meal.foods.reduce((mealSum, food) => mealSum + food.fat, 0), 0
+  );
+
+  return {
+    id: `nutrition-${index + 1}`,
+    date,
+    meals,
+    waterIntake: Math.floor(1500 + Math.random() * 1000),
+    totalCalories,
     macros: {
-      protein: 47,
-      carbs: 73,
-      fat: 34,
+      protein: totalProtein,
+      carbs: totalCarbs,
+      fat: totalFat,
       fiber: 14
     }
-  }
-];
+  };
+});
 
-export const mockStressData: StressData[] = [
-  {
-    id: '1',
-    date: today,
-    stressLevel: 35,
-    hrvReadings: [
-      { timestamp: new Date(today.getTime() - 2 * 60 * 60 * 1000), value: 45, heartRate: 72 },
-      { timestamp: new Date(today.getTime() - 1 * 60 * 60 * 1000), value: 42, heartRate: 75 },
-      { timestamp: new Date(today.getTime()), value: 48, heartRate: 68 }
-    ],
-    breathingExercises: [
-      {
-        id: '1',
-        duration: 5,
-        type: 'calm',
-        completedAt: new Date(today.getTime() - 3 * 60 * 60 * 1000)
-      }
-    ],
-    moodEntries: [
-      {
-        id: '1',
-        mood: 'good',
-        notes: 'Feeling energized after morning workout',
-        timestamp: new Date(today.getTime() - 4 * 60 * 60 * 1000)
-      }
-    ]
-  }
-];
+export const mockStressData: StressData[] = past7Days.map((date, index) => ({
+  id: `stress-${index + 1}`,
+  date,
+  stressLevel: Math.floor(20 + Math.random() * 40),
+  hrvReadings: Array(3).fill(0).map((_, i) => ({
+    timestamp: new Date(date.getTime() + (i + 1) * 3 * 60 * 60 * 1000),
+    value: Math.floor(35 + Math.random() * 20),
+    heartRate: Math.floor(60 + Math.random() * 20)
+  })),
+  breathingExercises: index % 3 === 0 ? [
+    {
+      id: `breathing-${index + 1}`,
+      duration: 5,
+      type: 'calm',
+      completedAt: new Date(date.getTime() + 10 * 60 * 60 * 1000)
+    }
+  ] : [],
+  moodEntries: [
+    {
+      id: `mood-${index + 1}`,
+      mood: ['good', 'neutral', 'excellent'][index % 3] as 'good' | 'neutral' | 'excellent',
+      notes: 'Feeling good today',
+      timestamp: new Date(date.getTime() + 12 * 60 * 60 * 1000)
+    }
+  ]
+}));
 
 export const mockChallenges: Challenge[] = [
   {
@@ -194,32 +218,29 @@ export const mockAchievements: Achievement[] = [
     id: '1',
     title: 'First Steps',
     description: 'Complete your first 1,000 steps',
-    icon: 'Footprints', // Changed to match Lucide icon name
+    icon: 'Footprints',
     category: 'activity',
     unlockedAt: new Date('2024-12-01'),
     progress: 1000,
-    target: 1000,
-    isUnlocked: true // Added for clarity
+    target: 1000
   },
   {
     id: '2',
     title: 'Marathon Walker',
     description: 'Walk 100,000 steps in a month',
-    icon: 'Trophy', // Changed to match Lucide icon name
+    icon: 'Trophy',
     category: 'activity',
     progress: 67543,
-    target: 100000,
-    isUnlocked: false
+    target: 100000
   },
   {
     id: '3',
     title: 'Sleep Champion',
     description: 'Maintain 8+ hours of sleep for 30 days',
-    icon: 'Moon', // Changed to match Lucide icon name
+    icon: 'Moon',
     category: 'sleep',
     progress: 12,
-    target: 30,
-    isUnlocked: false
+    target: 30
   }
 ];
 
