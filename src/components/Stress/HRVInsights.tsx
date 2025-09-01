@@ -23,6 +23,7 @@ export const HRVInsights: React.FC<HRVInsightsProps> = ({ readings }) => {
   const latestReading = readings[readings.length - 1];
   const avgHRV = readings.reduce((sum, reading) => sum + reading.value, 0) / readings.length;
   const trend = latestReading.value > avgHRV ? 'up' : 'down';
+  const difference = Math.abs(latestReading.value - avgHRV);
 
   const getHRVStatus = (value: number) => {
     if (value >= 45) return { status: 'Excellent', color: 'text-green-600', bg: 'bg-green-50' };
@@ -58,7 +59,7 @@ export const HRVInsights: React.FC<HRVInsightsProps> = ({ readings }) => {
                 <TrendingDown className="w-4 h-4 text-red-500" />
               )}
               <p className="text-lg font-semibold text-gray-900">
-                {Math.abs(latestReading.value - avgHRV).toFixed(1)}
+                {trend === 'up' ? '+' : '-'}{difference.toFixed(1)}
               </p>
             </div>
             <p className="text-sm text-gray-600">vs. Average</p>
