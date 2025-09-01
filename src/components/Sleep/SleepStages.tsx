@@ -81,4 +81,4 @@ export const SleepStages: React.FC<SleepStagesProps> = ({ data }) => {
       </div>
     </div>
   );
-};</content>
+};

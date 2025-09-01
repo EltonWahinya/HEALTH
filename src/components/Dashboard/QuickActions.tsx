@@ -54,4 +54,4 @@ export const QuickActions: React.FC = () => {
       </div>
     </div>
   );
-};</content>
+};

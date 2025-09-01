@@ -63,4 +63,4 @@ export const SleepInsights: React.FC<SleepInsightsProps> = ({ data }) => {
       </div>
     </div>
   );
-};</content>
+};

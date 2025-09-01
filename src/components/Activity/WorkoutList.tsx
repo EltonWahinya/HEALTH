@@ -57,4 +57,4 @@ export const WorkoutList: React.FC<WorkoutListProps> = ({ workouts }) => {
       </div>
     </div>
   );
-};</content>
+};

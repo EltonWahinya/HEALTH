@@ -69,4 +69,4 @@ export const Leaderboard: React.FC = () => {
       </div>
     </div>
   );
-};</content>
+};

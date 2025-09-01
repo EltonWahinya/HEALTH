@@ -82,4 +82,4 @@ export const BreathingExercises: React.FC<BreathingExercisesProps> = ({ sessions
       )}
     </div>
   );
-};</content>
+};

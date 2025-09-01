@@ -97,4 +97,4 @@ export const AchievementCard: React.FC<AchievementCardProps> = ({ achievement })
       </div>
     </div>
   );
-};</content>
+};

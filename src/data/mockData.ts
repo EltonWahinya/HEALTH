@@ -272,4 +272,4 @@ export const foodDatabase = [
   { id: '6', name: 'Almonds (28g)', calories: 164, protein: 6, carbs: 6, fat: 14, fiber: 3.5 },
   { id: '7', name: 'Salmon (100g)', calories: 208, protein: 25, carbs: 0, fat: 12, fiber: 0 },
   { id: '8', name: 'Avocado (1 medium)', calories: 234, protein: 3, carbs: 12, fat: 21, fiber: 10 }
-];</content>
+];

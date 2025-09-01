@@ -71,4 +71,4 @@ export const StressChart: React.FC<StressChartProps> = ({ data }) => {
       </div>
     </div>
   );
-};</content>
+};

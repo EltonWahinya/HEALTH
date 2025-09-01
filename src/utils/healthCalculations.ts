@@ -75,4 +75,4 @@ export const calculateWeeklyAverage = (data: any[], field: string): number => {
   if (data.length === 0) return 0;
   const sum = data.reduce((acc, item) => acc + (item[field] || 0), 0);
   return sum / data.length;
-};</content>
+};

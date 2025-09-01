@@ -74,4 +74,4 @@ export const HRVInsights: React.FC<HRVInsightsProps> = ({ readings }) => {
       </div>
     </div>
   );
-};</content>
+};

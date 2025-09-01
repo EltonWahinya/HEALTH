@@ -51,4 +51,4 @@ export const CalorieChart: React.FC<CalorieChartProps> = ({ data }) => {
       </div>
     </div>
   );
-};</content>
+};

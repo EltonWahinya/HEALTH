@@ -82,4 +82,4 @@ export const MoodTracker: React.FC<MoodTrackerProps> = ({ entries }) => {
       )}
     </div>
   );
-};</content>
+};

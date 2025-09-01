@@ -58,4 +58,4 @@ export const WaterTracker: React.FC<WaterTrackerProps> = ({ waterIntake, target 
       </div>
     </div>
   );
-};</content>
+};

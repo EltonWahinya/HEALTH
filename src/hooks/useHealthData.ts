@@ -51,4 +51,4 @@ export const useHealthData = () => {
     healthGoals,
     isLoading
   };
-};</content>
+}

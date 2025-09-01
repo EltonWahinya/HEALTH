@@ -68,4 +68,4 @@ export const MealList: React.FC<MealListProps> = ({ meals }) => {
       </div>
     </div>
   );
-};</content>
+};

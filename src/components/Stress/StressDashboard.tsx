@@ -30,4 +30,4 @@ export const StressDashboard: React.FC<StressDashboardProps> = ({ data }) => {
       </div>
     </div>
   );
-};</content>
+};

@@ -156,4 +156,4 @@ export interface HealthGoal {
   current: number;
   unit: string;
   isActive: boolean;
-}</content>
+}

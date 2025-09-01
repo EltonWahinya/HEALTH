@@ -30,4 +30,4 @@ export const SleepDashboard: React.FC<SleepDashboardProps> = ({ data }) => {
       <SleepInsights data={todayData} />
     </div>
   );
-};</content>
+};

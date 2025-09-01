@@ -79,4 +79,4 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({ challenge }) => {
       </div>
     </div>
   );
-};</content>
+};

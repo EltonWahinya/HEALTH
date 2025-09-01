@@ -77,4 +77,4 @@ export const GoalProgress: React.FC<GoalProgressProps> = ({ goal }) => {
       )}
     </div>
   );
-};</content>
+};

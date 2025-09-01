@@ -26,4 +26,4 @@ export const ActivityDashboard: React.FC<ActivityDashboardProps> = ({ data }) =>
       </div>
     </div>
   );
-};</content>
+};

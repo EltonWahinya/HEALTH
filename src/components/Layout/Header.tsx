@@ -39,4 +39,4 @@ export const Header: React.FC<HeaderProps> = ({ user }) => {
       </div>
     </header>
   );
-};</content>
+};

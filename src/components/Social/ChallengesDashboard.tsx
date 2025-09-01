@@ -81,4 +81,4 @@ export const ChallengesDashboard: React.FC<ChallengesDashboardProps> = ({ challe
       </div>
     </div>
   );
-};</content>
+};

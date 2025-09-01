@@ -59,4 +59,4 @@ export const AchievementStats: React.FC<AchievementStatsProps> = ({ achievements
       })}
     </div>
   );
-};</content>
+};

@@ -52,4 +52,4 @@ export const SleepChart: React.FC<SleepChartProps> = ({ data }) => {
       </div>
     </div>
   );
-};</content>
+};

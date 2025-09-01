@@ -73,4 +73,4 @@ export const MacroBreakdown: React.FC<MacroBreakdownProps> = ({ macros }) => {
       </div>
     </div>
   );
-};</content>
+};

@@ -30,4 +30,4 @@ export const NutritionDashboard: React.FC<NutritionDashboardProps> = ({ data }) 
       </div>
     </div>
   );
-};</content>
+};
