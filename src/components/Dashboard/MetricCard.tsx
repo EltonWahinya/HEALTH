@@ -1,5 +1,5 @@
 import React from 'react';
-import { DivideIcon as LucideIcon } from 'lucide-react';
+import { LucideIcon } from 'lucide-react'; // Fixed import
 import clsx from 'clsx';
 
 interface MetricCardProps {
@@ -56,10 +56,10 @@ export const MetricCard: React.FC<MetricCardProps> = ({
   target,
   icon: Icon,
   color,
-  progress = 0
+  progress
 }) => {
   const colors = colorClasses[color];
-  const progressClamped = Math.min(Math.max(progress, 0), 100);
+  const progressClamped = progress !== undefined ? Math.min(Math.max(progress, 0), 100) : 0;
 
   return (
     <div className={clsx(
