@@ -1,4 +1,5 @@
 import React from 'react';
+import clsx from 'clsx';
 import { Trophy, Medal, Award, Crown } from 'lucide-react';
 
 export const Leaderboard: React.FC = () => {
