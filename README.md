@@ -75,6 +75,8 @@ Elton Wahinya- <https://github.com/EltonWahinya>
 
 Joseph Njoroge- <https://joseph-njoroge.vercel.app/>
 
+Cynthia Maingi <https://github.com/cynmaingi>
+
 Contributing
 
 Contributions are welcome. For significant changes, please open an issue to discuss the proposed modifications.
