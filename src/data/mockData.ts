@@ -175,7 +175,7 @@ export const mockStressData: StressData[] = past7Days.map((date, index) => ({
   moodEntries: [
     {
       id: `mood-${index + 1}`,
-      mood: ['good', 'neutral', 'excellent'][index % 3] as 'good' | 'neutral' | 'excellent',
+      mood: ['good', 'neutral', 'excellent'][index % 3] as 'good' | 'okay' | 'excellent',
       notes: 'Feeling good today',
       timestamp: new Date(date.getTime() + 12 * 60 * 60 * 1000)
     }
