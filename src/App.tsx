@@ -1,4 +1,4 @@
-import React from 'react';
+// src/App.tsx
 import { useState } from 'react';
 import { Header } from './components/Layout/Header';
 import { Navigation } from './components/Layout/Navigation';
@@ -11,13 +11,48 @@ import { ChallengesDashboard } from './components/Social/ChallengesDashboard';
 import { AchievementsDashboard } from './components/Achievements/AchievementsDashboard';
 import { LoadingSpinner } from './components/LoadingSpinner';
 import { useHealthData } from './hooks/useHealthData';
-// Import mock data for fallback
 import {
   mockActivityData,
   mockSleepData,
   mockNutritionData,
   mockStressData
 } from './data/mockData';
+
+// Username Gate Component
+function UsernameGate({ children }: { children: React.ReactNode }) {
+  const [username, setUsername] = useState<string | null>(
+    localStorage.getItem('username')
+  );
+  const [input, setInput] = useState('');
+
+  const save = () => {
+    if (input.trim().length === 0) return;
+    localStorage.setItem('username', input);
+    setUsername(input);
+  };
+
+  if (!username) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen bg-gray-50">
+        <h1 className="text-2xl font-bold mb-4">Welcome to WellSpring 🌱</h1>
+        <input
+          className="border p-2 rounded mb-2 w-64"
+          placeholder="Enter a username"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+        />
+        <button
+          onClick={save}
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          Continue
+        </button>
+      </div>
+    );
+  }
+
+  return <>{children}</>;
+}
 
 function App() {
   const [activeTab, setActiveTab] = useState('today');
@@ -37,7 +72,6 @@ function App() {
     return <LoadingSpinner />;
   }
 
-  // Safe data access with fallback to mock data
   const currentActivityData = activityData[0] || mockActivityData[0];
   const currentSleepData = sleepData[0] || mockSleepData[0];
   const currentNutritionData = nutritionData[0] || mockNutritionData[0];
@@ -56,13 +90,29 @@ function App() {
           />
         );
       case 'activity':
-        return <ActivityDashboard data={activityData.length > 0 ? activityData : mockActivityData} />;
+        return (
+          <ActivityDashboard
+            data={activityData.length > 0 ? activityData : mockActivityData}
+          />
+        );
       case 'sleep':
-        return <SleepDashboard data={sleepData.length > 0 ? sleepData : mockSleepData} />;
+        return (
+          <SleepDashboard
+            data={sleepData.length > 0 ? sleepData : mockSleepData}
+          />
+        );
       case 'nutrition':
-        return <NutritionDashboard data={nutritionData.length > 0 ? nutritionData : mockNutritionData} />;
+        return (
+          <NutritionDashboard
+            data={nutritionData.length > 0 ? nutritionData : mockNutritionData}
+          />
+        );
       case 'stress':
-        return <StressDashboard data={stressData.length > 0 ? stressData : mockStressData} />;
+        return (
+          <StressDashboard
+            data={stressData.length > 0 ? stressData : mockStressData}
+          />
+        );
       case 'challenges':
         return <ChallengesDashboard challenges={challenges} />;
       case 'achievements':
@@ -81,17 +131,17 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header user={user} />
-      <div className="flex">
-        <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
-        <main className="flex-1 p-6">
-          <div className="max-w-7xl mx-auto">
-            {renderContent()}
-          </div>
-        </main>
+    <UsernameGate>
+      <div className="min-h-screen bg-gray-50">
+        <Header user={user} />
+        <div className="flex">
+          <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
+          <main className="flex-1 p-6">
+            <div className="max-w-7xl mx-auto">{renderContent()}</div>
+          </main>
+        </div>
       </div>
-    </div>
+    </UsernameGate>
   );
 }
 

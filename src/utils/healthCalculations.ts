@@ -14,8 +14,8 @@ export const getBMICategory = (bmi: number): string => {
 };
 
 export const calculateCaloriesBurned = (
-  weight: number, 
-  activityType: string, 
+  weight: number,
+  activityType: string,
   duration: number
 ): number => {
   // MET values for different activities

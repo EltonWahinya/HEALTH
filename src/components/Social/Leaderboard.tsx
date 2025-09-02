@@ -1,15 +1,46 @@
-import React from 'react';
+// src/components/Social/Leaderboard.tsx
+import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { Trophy, Medal, Award, Crown } from 'lucide-react';
+import { supabase } from '../../utils/supabaseClient';
+
+type Leader = {
+  username: string;
+  steps: number;
+};
 
 export const Leaderboard: React.FC = () => {
-  const leaderboardData = [
-    { rank: 1, name: 'Sarah Kim', steps: 15420, avatar: '👩‍💼' },
-    { rank: 2, name: 'Mike Chen', steps: 14890, avatar: '👨‍💻' },
-    { rank: 3, name: 'Alex Johnson', steps: 14567, avatar: '👤' },
-    { rank: 4, name: 'Emma Davis', steps: 13890, avatar: '👩‍🎨' },
-    { rank: 5, name: 'You', steps: 8547, avatar: '👤', isCurrentUser: true }
-  ];
+  const [leaders, setLeaders] = useState<Leader[]>([]);
+  const currentUser = localStorage.getItem('username') || 'You';
+
+  useEffect(() => {
+    const fetchLeaders = async () => {
+      const { data, error } = await supabase
+        .from('steps')
+        .select('username, steps')
+        .order('steps', { ascending: false })
+        .limit(10);
+
+      if (!error && data) {
+        // Deduplicate: only keep highest score per username
+        const deduped = Object.values(
+          data.reduce((acc: Record<string, Leader>, curr: Leader) => {
+            if (!acc[curr.username] || curr.steps > acc[curr.username].steps) {
+              acc[curr.username] = curr;
+            }
+            return acc;
+          }, {})
+        ) as Leader[];
+
+        // Sort descending
+        setLeaders(deduped.sort((a, b) => b.steps - a.steps));
+      }
+    };
+
+    fetchLeaders();
+    const interval = setInterval(fetchLeaders, 5000); // 5s refresh
+    return () => clearInterval(interval);
+  }, []);
 
   const getRankIcon = (rank: number) => {
     switch (rank) {
@@ -24,49 +55,51 @@ export const Leaderboard: React.FC = () => {
     <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
       <div className="flex items-center space-x-2 mb-4">
         <Trophy className="w-5 h-5 text-yellow-500" />
-        <h3 className="text-lg font-semibold text-gray-900">Weekly Leaderboard</h3>
+        <h3 className="text-lg font-semibold text-gray-900">Global Leaderboard</h3>
       </div>
 
       <div className="space-y-3">
-        {leaderboardData.map((user) => (
-          <div 
-            key={user.rank}
-            className={clsx(
-              'flex items-center space-x-3 p-3 rounded-lg transition-colors',
-              user.isCurrentUser 
-                ? 'bg-blue-50 border border-blue-200' 
-                : 'hover:bg-gray-50'
-            )}
-          >
-            <div className="flex items-center justify-center w-8">
-              {getRankIcon(user.rank)}
-            </div>
-            
-            <div className="text-2xl">{user.avatar}</div>
-            
-            <div className="flex-1">
-              <p className={clsx(
-                'font-medium',
-                user.isCurrentUser ? 'text-blue-900' : 'text-gray-900'
-              )}>
-                {user.name}
-              </p>
-              <p className="text-sm text-gray-600">{user.steps.toLocaleString()} steps</p>
-            </div>
-            
-            {user.rank <= 3 && (
-              <div className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
-                Top 3
+        {leaders.map((user, index) => {
+          const rank = index + 1;
+          const isCurrentUser = user.username === currentUser;
+          return (
+            <div
+              key={user.username}
+              className={clsx(
+                'flex items-center space-x-3 p-3 rounded-lg transition-colors',
+                isCurrentUser
+                  ? 'bg-blue-50 border border-blue-200'
+                  : 'hover:bg-gray-50'
+              )}
+            >
+              <div className="flex items-center justify-center w-8">
+                {getRankIcon(rank)}
               </div>
-            )}
-          </div>
-        ))}
-      </div>
 
-      <div className="mt-4 pt-4 border-t border-gray-200 text-center">
-        <p className="text-sm text-gray-600">
-          You're ranked <strong>#{leaderboardData.find(u => u.isCurrentUser)?.rank}</strong> out of 1,247 participants
-        </p>
+              <div className="text-2xl">👤</div>
+
+              <div className="flex-1">
+                <p
+                  className={clsx(
+                    'font-medium',
+                    isCurrentUser ? 'text-blue-900' : 'text-gray-900'
+                  )}
+                >
+                  {user.username}
+                </p>
+                <p className="text-sm text-gray-600">
+                  {user.steps.toLocaleString()} steps
+                </p>
+              </div>
+
+              {rank <= 3 && (
+                <div className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
+                  Top 3
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
