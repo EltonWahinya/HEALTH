@@ -1,4 +1,4 @@
-WellSpring
+# WellSpring
 
 WellSpring is a wellness and stress-management application built for hackathons and beyond. It enables users to track stress levels, log moods, monitor heart rate variability (HRV), counting steps and practice breathing exercises within an integrated dashboard. The platform includes a global leaderboard powered by Supabase, allowing participants to share progress in real time.
 
